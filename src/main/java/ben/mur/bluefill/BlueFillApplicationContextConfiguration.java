@@ -1,6 +1,5 @@
 package ben.mur.bluefill;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.GroupActor;
 import com.vk.api.sdk.exceptions.ApiException;
@@ -15,8 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import javax.sql.DataSource;
-
 
 @Configuration
 @PropertySource("classpath:vk.properties")
@@ -26,15 +23,6 @@ public class BlueFillApplicationContextConfiguration {
 
     @Autowired
     private ApplicationContext ctx;
-
-    @Bean
-    public DataSource dataSource() {
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUser("user");
-        dataSource.setPassword("password");
-        dataSource.setURL("url");
-        return dataSource;
-    }
 
     @Bean
     public VkApiClient vkApiClient() throws ClientException, ApiException {
@@ -52,7 +40,6 @@ public class BlueFillApplicationContextConfiguration {
 
         String groupId = env.getProperty("groupId");
         String accessToken = env.getProperty("token");
-
 
         return new GroupActor(Integer.parseInt(groupId), accessToken);
     }
