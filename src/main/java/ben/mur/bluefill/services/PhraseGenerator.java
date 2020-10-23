@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -26,30 +28,27 @@ public class PhraseGenerator{
     }
 
     public String getAnswer(String text){
-        Integer directorId = getDirectorIdFromMessage(directorsRepository.findAll(), text);
-
-        if(directorId > 0){
+        try {
+            Integer directorId = getDirectorIdFromMessage(directorsRepository.findAll(), text);
             ArrayList<QuotesEntity> quotes = quotesRepository.findAllByMovies_DirectorsId(directorId);
             QuotesEntity randomQuoteEntity = quotes.get(rnd.nextInt(quotes.size()));
+
             return randomQuoteEntity.getQuote();
+        } catch (NoSuchElementException e) {
+            ArrayList<QuotesEntity> quotes = quotesRepository.findAll();
+            QuotesEntity randomQuote = quotes.get(rnd.nextInt(quotes.size()));
+
+            return randomQuote.getQuote();
         }
-
-        ArrayList<QuotesEntity> quotes = quotesRepository.findAll();
-        QuotesEntity randomQuote = quotes.get(rnd.nextInt(quotes.size()));
-
-        return randomQuote.getQuote();
     }
 
-   private Integer getDirectorIdFromMessage(ArrayList<DirectorsEntity> directors, String text){
-        String lowerCaseText = text.toLowerCase();
+   private Integer getDirectorIdFromMessage(ArrayList<DirectorsEntity> directors, String text) throws NoSuchElementException{
+        Optional<DirectorsEntity> director = directors.stream().filter(d -> text.toLowerCase().contains(d.getLastName())).findFirst();
 
-        for (DirectorsEntity director : directors){
-            String lastName = director.getLastName().toLowerCase();
-            if (lowerCaseText.contains(lastName)){
-                return director.getId();
-            }
+        if(director.isPresent()){
+            return director.get().getId();
+        } else {
+            throw new NoSuchElementException("Такого режиссера нет");
         }
-
-        return -1;
    }
 }
