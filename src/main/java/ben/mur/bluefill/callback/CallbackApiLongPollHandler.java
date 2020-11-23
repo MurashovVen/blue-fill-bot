@@ -6,6 +6,7 @@ import com.vk.api.sdk.client.actors.GroupActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.messages.Message;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class CallbackApiLongPollHandler extends CallbackApiLongPoll {
     private final ApplicationContext ctx;
 
@@ -27,13 +29,12 @@ public class CallbackApiLongPollHandler extends CallbackApiLongPoll {
     @Override
     public void messageNew(Integer groupId, Message message) {
         LOG.info("messageNew: " + message.toString());
+
         MessageHandler messageHandler = ctx.getBean(MessageHandler.class);
         try {
             messageHandler.handleMessage(message);
-        } catch (ClientException e) {
-            e.printStackTrace();
-        } catch (ApiException e) {
-            e.printStackTrace();
+        } catch (ClientException | ApiException e) {
+            log.warn(e.getMessage());
         }
     }
 }
