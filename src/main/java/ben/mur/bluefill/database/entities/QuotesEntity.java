@@ -18,7 +18,7 @@ public class QuotesEntity {
     @Column(name = "quote")
     private String quote;
     @ManyToOne
-    @NotFound(action= NotFoundAction.IGNORE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "movie_name", referencedColumnName = "name")
     private MoviesEntity movies;
 }

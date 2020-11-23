@@ -21,7 +21,7 @@ public class MessageHandler {
     private final Random rnd = new Random();
 
     @Autowired
-    MessageHandler(VkApiClient vkApiClient, GroupActor groupActor, ApplicationContext ctx){
+    MessageHandler(VkApiClient vkApiClient, GroupActor groupActor, ApplicationContext ctx) {
         this.vkApiClient = vkApiClient;
         this.groupActor = groupActor;
         this.ctx = ctx;
@@ -29,7 +29,7 @@ public class MessageHandler {
 
     public void handleMessage(Message message) throws ClientException, ApiException {
         String textMessage = message.getText().toLowerCase();
-        if (textMessage.contains("фил")){
+        if (textMessage.contains("фил")) {
             sendChatMessage(message);
         }
     }

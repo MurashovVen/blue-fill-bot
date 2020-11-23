@@ -16,7 +16,7 @@ public class ApplicationContextProvider implements ApplicationContextAware {
     }
 
     @Bean
-    public ApplicationContext getApplicationContext(){
+    public ApplicationContext getApplicationContext() {
         return ctx;
     }
 }

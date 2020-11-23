@@ -5,7 +5,6 @@ import ben.mur.bluefill.database.entities.QuotesEntity;
 import ben.mur.bluefill.database.repositories.DirectorsRepository;
 import ben.mur.bluefill.database.repositories.QuotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,8 +13,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
-@Scope("prototype")
-public class PhraseGenerator{
+public class PhraseGenerator {
     private final DirectorsRepository directorsRepository;
     private final QuotesRepository quotesRepository;
 
@@ -27,7 +25,7 @@ public class PhraseGenerator{
         this.quotesRepository = quotesRepository;
     }
 
-    public String getAnswer(String text){
+    public String getAnswer(String text) {
         try {
             Integer directorId = getDirectorIdFromMessage(directorsRepository.findAll(), text);
             ArrayList<QuotesEntity> quotes = quotesRepository.findAllByMovies_DirectorsId(directorId);
@@ -42,13 +40,13 @@ public class PhraseGenerator{
         }
     }
 
-   private Integer getDirectorIdFromMessage(ArrayList<DirectorsEntity> directors, String text) throws NoSuchElementException{
+    private Integer getDirectorIdFromMessage(ArrayList<DirectorsEntity> directors, String text) throws NoSuchElementException {
         Optional<DirectorsEntity> director = directors.stream().filter(d -> text.toLowerCase().contains(d.getLastName())).findFirst();
 
-        if(director.isPresent()){
+        if (director.isPresent()) {
             return director.get().getId();
         } else {
             throw new NoSuchElementException("Такого режиссера нет");
         }
-   }
+    }
 }

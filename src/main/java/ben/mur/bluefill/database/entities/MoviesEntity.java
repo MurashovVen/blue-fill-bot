@@ -14,7 +14,7 @@ public class MoviesEntity {
     @Column(name = "name")
     private String name;
     @ManyToOne
-    @NotFound(action= NotFoundAction.IGNORE)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "directors_id", referencedColumnName = "id")
     private DirectorsEntity directors;
 }
