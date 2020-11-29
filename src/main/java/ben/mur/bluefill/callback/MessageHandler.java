@@ -1,13 +1,12 @@
 package ben.mur.bluefill.callback;
 
-import ben.mur.bluefill.services.PhraseGenerator;
+import ben.mur.bluefill.service.PhraseGenerator;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.GroupActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.messages.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -17,14 +16,14 @@ public class MessageHandler {
 
     private final VkApiClient vkApiClient;
     private final GroupActor groupActor;
-    private final ApplicationContext ctx;
+    private final PhraseGenerator phraseGenerator;
     private final Random rnd = new Random();
 
     @Autowired
-    MessageHandler(VkApiClient vkApiClient, GroupActor groupActor, ApplicationContext ctx) {
+    MessageHandler(VkApiClient vkApiClient, GroupActor groupActor, PhraseGenerator phraseGenerator) {
         this.vkApiClient = vkApiClient;
         this.groupActor = groupActor;
-        this.ctx = ctx;
+        this.phraseGenerator = phraseGenerator;
     }
 
     public void handleMessage(Message message) throws ClientException, ApiException {
@@ -35,7 +34,6 @@ public class MessageHandler {
     }
 
     private void sendChatMessage(Message message) throws ClientException, ApiException {
-        PhraseGenerator phraseGenerator = ctx.getBean(PhraseGenerator.class);
         String answer = phraseGenerator.getAnswer(message.getText());
         vkApiClient.messages().send(groupActor).peerId(message.getPeerId()).
                 message(answer).randomId(rnd.nextInt(99999)).execute();

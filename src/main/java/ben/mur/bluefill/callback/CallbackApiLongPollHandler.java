@@ -10,27 +10,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class CallbackApiLongPollHandler extends CallbackApiLongPoll {
-    private final ApplicationContext ctx;
-
+    private final MessageHandler messageHandler;
     private static final Logger LOG = LoggerFactory.getLogger(CallbackApiLongPollHandler.class);
 
     @Autowired
-    public CallbackApiLongPollHandler(VkApiClient vkApiClient, GroupActor groupActor, ApplicationContext ctx) {
+    public CallbackApiLongPollHandler(VkApiClient vkApiClient, GroupActor groupActor, MessageHandler messageHandler) throws ClientException, ApiException {
         super(vkApiClient, groupActor);
-        this.ctx = ctx;
+        this.messageHandler = messageHandler;
+
+        this.run();
     }
 
     @Override
     public void messageNew(Integer groupId, Message message) {
         LOG.info("messageNew: " + message.toString());
 
-        MessageHandler messageHandler = ctx.getBean(MessageHandler.class);
         try {
             messageHandler.handleMessage(message);
         } catch (ClientException | ApiException e) {

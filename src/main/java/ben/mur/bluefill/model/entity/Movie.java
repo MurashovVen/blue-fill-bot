@@ -1,20 +1,24 @@
-package ben.mur.bluefill.database.entities;
+package ben.mur.bluefill.model.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "movies", schema = "schema")
-public class MoviesEntity {
+@Table(name = "movies")
+public class Movie {
     @Id
-    @Column(name = "name")
     private String name;
+
     @ManyToOne
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "directors_id", referencedColumnName = "id")
-    private DirectorsEntity directors;
+    private Director directors;
 }

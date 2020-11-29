@@ -1,4 +1,4 @@
-package ben.mur.bluefill;
+package ben.mur.bluefill.config;
 
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.GroupActor;
@@ -12,14 +12,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
 
 @Configuration
 @PropertySource("classpath:vk.properties")
-@ComponentScan
-@EnableJpaRepositories("ben.mur.bluefill.database.repositories")
-public class BlueFillApplicationContextConfiguration {
+@ComponentScan(basePackages = "ben.mur.bluefill")
+public class AppConfig {
 
     @Autowired
     private ApplicationContext ctx;
